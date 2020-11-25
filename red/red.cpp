@@ -17,7 +17,18 @@ using namespace cv;3
 
 vector<Mat> input(string path)
 {
-
+    string folder_path=path;
+    vector<string> file_names;
+    glob(folder_path, file_names);
+    vector<Mat> img;
+    Mat imgpass;
+    for (int i = 0; i < file_names.size(); i++)
+    {
+        cout << file_names[i] << endl;
+        imgpass=imread(file_names[i]);
+        img.push_back(imgpass);
+    }
+    return img;
 }
 
 int main()
