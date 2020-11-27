@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+
 #include<cstdlib>
 #include<opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
@@ -10,9 +11,11 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<opencv2/features2d/features2d.hpp>
+//#include<opencv2\xfeatures2d.hpp>
 
 using namespace std;
-using namespace cv;3
+using namespace cv;
 
 
 vector<Mat> input(string path)
@@ -29,6 +32,20 @@ vector<Mat> input(string path)
         img.push_back(imgpass);
     }
     return img;
+}
+
+vector<vector<KeyPoint>> features(vector<Mat> inputimg)//特征点提取，使用FAST
+{
+	vector<KeyPoint> keypoint;
+	vector<vector<KeyPoint>> keypoints;//keypoingts是keypoint的集合
+	for (int i = 0; i < inputimg.size(); i++)
+	{
+		Ptr<FastFeatureDetector>  detector = FastFeatureDetector::create(40);
+		detector->detect(inputimg[i], keypoint);
+		keypoints.push_back(keypoint);
+	}
+	//在这里加入匹配，用FLANN?
+	return keypoints;
 }
 
 int main()
