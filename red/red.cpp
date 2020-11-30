@@ -37,7 +37,7 @@ vector<Mat> input(string path)
 vector<vector<KeyPoint>> features(vector<Mat> inputimg)//特征点提取，使用FAST
 {
 	vector<KeyPoint> keypoint;
-	vector<vector<KeyPoint>> keypoints;//keypoingts是keypoint的集合
+	vector<vector<KeyPoint>> keypoints;//keypoingts是keypoint的集合，指所有图像的特征点
 	for (int i = 0; i < inputimg.size(); i++)
 	{
 		Ptr<FastFeatureDetector>  detector = FastFeatureDetector::create(40);
@@ -47,6 +47,21 @@ vector<vector<KeyPoint>> features(vector<Mat> inputimg)//特征点提取，使用FAST
 	//在这里加入匹配，用FLANN?
 	return keypoints;
 }
+
+vector<Mat> brief(vector<vector<KeyPoint>> keypoints, vector<Mat> imginput)//brief描述子计算，输入原图像和关键点
+{
+    BriefDescriptorExtractor brief;
+    vector<Mat> descriptor;
+    Mat descriptorpass;
+    for (int i = 0; i < keypoints.size(); i++)
+    {
+        brief.compute(imginput[i], keypoints[i], descriptorpass);
+        descriptor.push_back(descriptorpass);
+    }
+    return descriptor;//descriptor集成所有帧的描述子，单独帧可切片出来
+}
+
+
 
 int main()
 {
